@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Product Catalogue
+  version: '1.0'
+  description: Product Catalogue API
+  contact:
+    name: Seyi
+paths:
+  /api/product/{pageNo}/{pageSize}:
+    get:
+      parameters:
+        - schema:
+            type: integer
+            format: int64
+          name: pageNo
+          in: path
+          description: Page number
+        - schema:
+            type: integer
+            format: int64
+          name: pageSize
+          in: path
+          description: Page size
+      summary: Return list of product request
+      operationId: getProductRequests
+      description: return list of product request
+      tags:
+        - product-spec
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: "#/components/schemas/ProductDto"
+  /api/product:
+    post:
+      summary: Submit product request
+      operationId: submitProductRequest
+      description: submit product request
+      tags:
+        - product-spec
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Product
+              type: object
+              $ref: "#/components/schemas/ProductDto"
+      responses:
+        '201':
+          description: Created.
+        '400':
+          $ref: "#/components/schemas/ApiError"
+        '500':
+          $ref: "#/components/schemas/ApiError"
+  /api/product/{requestId}:
+    parameters:
+      - schema:
+          type: integer
+        name: requestId
+        in: path
+        required: true
+        description: request id
+    get:
+      summary: Return a product request
+      operationId: getProductByRequestId
+      description: Return a product by request id
+      tags:
+        - product-spec
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDto"
+        '400':
+          $ref: "#/components/schemas/ApiError"
+        '404':
+          $ref: "#/components/schemas/ApiError"
+        '500':
+          $ref: "#/components/schemas/ApiError"
+components:
+  schemas:
+    ProductRequestDto:
+      title: ProductRequestDto
+      type: object
+      properties:
+        requestId:
+          type: integer
+          format: int64
+        createdDate:
+          type: string
+          format: date-time
+    ProductDto:
+      title: ProductDto
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        color:
+          type: string
+        size:
+          type: string
+        productRequestDto:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/ProductRequestDto"
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
