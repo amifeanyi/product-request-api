@@ -1,7 +1,6 @@
 
 package com.product.api.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import com.product.api.services.ProductService;
